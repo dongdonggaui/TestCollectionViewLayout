@@ -69,13 +69,13 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
 {
     UICollectionViewLayoutAttributes *currentItemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    NSInteger totalColumnSliceCount = [self.layoutDelegate numberOfColumnSliceForSection:indexPath.section];
-    NSInteger columnSliceCount = [self.layoutDelegate columnSliceCountForItemAtIndexPath:indexPath];
-    NSInteger rowSliceCount = [self.layoutDelegate rowSliceCountForItemAtIndexPath:indexPath];
-    CGFloat horizontalSpacing = [self.layoutDelegate horizontalSpaceForSection:indexPath.section];
-    CGFloat verticalSpacing = [self.layoutDelegate verticalSpaceForSection:indexPath.section];
-    UIEdgeInsets insets = [self.layoutDelegate contentIndsetsForSection:indexPath.section];
-    CGFloat rate = [self.layoutDelegate rateOfHeightWidthForUnitForSection:indexPath.section];
+    NSInteger totalColumnSliceCount = [self.layoutDelegate mt_collectionViewLayout:self numberOfColumnSliceForSection:indexPath.section];
+    NSInteger columnSliceCount = [self.layoutDelegate mt_collectionViewLayout:self columnSliceCountForItemAtIndexPath:indexPath];
+    NSInteger rowSliceCount = [self.layoutDelegate mt_collectionViewLayout:self rowSliceCountForItemAtIndexPath:indexPath];
+    CGFloat horizontalSpacing = [self.layoutDelegate mt_collectionViewLayout:self horizontalSpaceForSection:indexPath.section];
+    CGFloat verticalSpacing = [self.layoutDelegate mt_collectionViewLayout:self verticalSpaceForSection:indexPath.section];
+    UIEdgeInsets insets = [self.layoutDelegate mt_collectionViewLayout:self contentIndsetsForSection:indexPath.section];
+    CGFloat rate = [self.layoutDelegate mt_collectionViewLayout:self rateOfHeightWidthForUnitForSection:indexPath.section];
     
     if (self.currentLayoutPointX == 0) {
         self.currentLayoutPointX += insets.left;
@@ -95,12 +95,12 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
     
     BOOL isFirstItem = indexPath.item == 0;
     BOOL isLastItem = indexPath.item == [self.collectionView numberOfItemsInSection:indexPath.section] - 1;
-    BOOL showHeadder = [self.layoutDelegate respondsToSelector:@selector(heightForHeaderInSection:)] && [self.layoutDelegate heightForHeaderInSection:indexPath.section] > 0;
+    BOOL showHeadder = [self.layoutDelegate respondsToSelector:@selector(mt_collectionViewLayout:heightForHeaderInSection:)] && [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section] > 0;
     
     CGFloat headerHeight = 0;
     if (showHeadder) {
         if (isFirstItem) {
-            headerHeight = [self.layoutDelegate heightForHeaderInSection:indexPath.section];
+            headerHeight = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section];
             CGFloat headerY = 0;
             if (indexPath.section > 0) {
                 headerY = self.currentLayoutPointY + self.lastItemHeight;
@@ -147,17 +147,17 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
     
     if ([kind isEqualToString:MTCollectionViewSupplementaryViewColumnHeader]) {
         
-        CGFloat height = [self.layoutDelegate heightForHeaderInSection:indexPath.section];
+        CGFloat height = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section];
         CGFloat width = CGRectGetWidth(self.collectionView.frame);
         CGFloat x = 0;
         CGFloat y = [[self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", indexPath.section]] floatValue];
         
-        BOOL sticky = [self.layoutDelegate respondsToSelector:@selector(stickyHeadersInSection:)] && [self.layoutDelegate stickyHeadersInSection:indexPath.section];
+        BOOL sticky = [self.layoutDelegate respondsToSelector:@selector(mt_collectionViewLayout:stickyHeadersInSection:)] && [self.layoutDelegate mt_collectionViewLayout:self stickyHeadersInSection:indexPath.section];
         if (sticky) {
             CGFloat maxY = y;
             if (indexPath.section < [self.collectionView numberOfSections] - 1) {
                 CGFloat nextY = [[self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", indexPath.section + 1]] floatValue];
-                CGFloat nextHeight = [self.layoutDelegate heightForHeaderInSection:indexPath.section + 1];
+                CGFloat nextHeight = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section + 1];
                 maxY = nextY - nextHeight;
             }
             
@@ -222,13 +222,13 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
 #pragma mark - Private Methods
 - (BOOL)stickyHeadersInAnySection
 {
-    BOOL sticky = [self.layoutDelegate respondsToSelector:@selector(stickyHeadersInSection:)];
+    BOOL sticky = [self.layoutDelegate respondsToSelector:@selector(mt_collectionViewLayout:stickyHeadersInSection:)];
     if (!sticky) {
         return NO;
     }
     
     for (int i = 0; i < [self.collectionView numberOfSections]; i++) {
-        if ([self.layoutDelegate stickyHeadersInSection:i]) {
+        if ([self.layoutDelegate mt_collectionViewLayout:self stickyHeadersInSection:i]) {
             return YES;
         }
     }
@@ -264,7 +264,7 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
             NSUInteger sectionsCount = [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView];
             for (NSUInteger sectionIdx = 0; sectionIdx < sectionsCount; sectionIdx++) {
                 
-                BOOL hasColumnHeader = [self.layoutDelegate respondsToSelector:@selector(heightForHeaderInSection:)] && [self.layoutDelegate heightForHeaderInSection:sectionIdx] > 0;
+                BOOL hasColumnHeader = [self.layoutDelegate respondsToSelector:@selector(mt_collectionViewLayout:heightForHeaderInSection:)] && [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:sectionIdx] > 0;
                 if (hasColumnHeader) {
                     [layoutAttributes addObject:[self layoutAttributesForSupplementaryViewOfKind:MTCollectionViewSupplementaryViewColumnHeader
                                                                                      atIndexPath:[NSIndexPath indexPathForItem:0

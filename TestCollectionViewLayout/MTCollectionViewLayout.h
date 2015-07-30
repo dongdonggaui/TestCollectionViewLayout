@@ -10,19 +10,21 @@
 
 extern NSString * const MTCollectionViewSupplementaryViewColumnHeader;
 
+@class MTCollectionViewLayout;
+
 @protocol MTCollectionViewLayoutDelegate <NSObject>
 
-- (NSInteger)numberOfColumnSliceForSection:(NSInteger)section;
-- (CGFloat)rateOfHeightWidthForUnitForSection:(NSInteger)section;
-- (NSInteger)columnSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (NSInteger)rowSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (CGFloat)horizontalSpaceForSection:(NSInteger)section;
-- (CGFloat)verticalSpaceForSection:(NSInteger)section;
-- (UIEdgeInsets)contentIndsetsForSection:(NSInteger)section;
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout numberOfColumnSliceForSection:(NSInteger)section;
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout rateOfHeightWidthForUnitForSection:(NSInteger)section;
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout columnSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout rowSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout horizontalSpaceForSection:(NSInteger)section;
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout verticalSpaceForSection:(NSInteger)section;
+- (UIEdgeInsets)mt_collectionViewLayout:(MTCollectionViewLayout *)layout contentIndsetsForSection:(NSInteger)section;
 
 @optional
-- (BOOL)stickyHeadersInSection:(NSUInteger)section;
-- (CGFloat)heightForHeaderInSection:(NSUInteger)section;
+- (BOOL)mt_collectionViewLayout:(MTCollectionViewLayout *)layout stickyHeadersInSection:(NSUInteger)section;
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout heightForHeaderInSection:(NSUInteger)section;
 
 @end
 

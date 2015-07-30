@@ -75,17 +75,17 @@
 }
 
 #pragma mark - MTCollectionViewLayoutDelegate
-- (NSInteger)numberOfColumnSliceForSection:(NSInteger)section
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout numberOfColumnSliceForSection:(NSInteger)section
 {
     return 10;
 }
 
-- (CGFloat)rateOfHeightWidthForUnitForSection:(NSInteger)section
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout rateOfHeightWidthForUnitForSection:(NSInteger)section
 {
     return 1;
 }
 
-- (NSInteger)columnSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout columnSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
         return 5;
@@ -96,7 +96,7 @@
     }
 }
 
-- (NSInteger)rowSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath
+- (NSInteger)mt_collectionViewLayout:(MTCollectionViewLayout *)layout rowSliceCountForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
         return 2;
@@ -107,27 +107,27 @@
     }
 }
 
-- (CGFloat)horizontalSpaceForSection:(NSInteger)section
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout horizontalSpaceForSection:(NSInteger)section
 {
     return 5;
 }
 
-- (CGFloat)verticalSpaceForSection:(NSInteger)section
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout verticalSpaceForSection:(NSInteger)section
 {
     return 5;
 }
 
-- (UIEdgeInsets)contentIndsetsForSection:(NSInteger)section
+- (UIEdgeInsets)mt_collectionViewLayout:(MTCollectionViewLayout *)layout contentIndsetsForSection:(NSInteger)section
 {
     return UIEdgeInsetsMake(10, 10, 10, 10);
 }
 
-- (BOOL)stickyHeadersInSection:(NSUInteger)section
+- (BOOL)mt_collectionViewLayout:(MTCollectionViewLayout *)layout stickyHeadersInSection:(NSUInteger)section
 {
     return YES;
 }
 
-- (CGFloat)heightForHeaderInSection:(NSUInteger)section
+- (CGFloat)mt_collectionViewLayout:(MTCollectionViewLayout *)layout heightForHeaderInSection:(NSUInteger)section
 {
     return 44;
 }
