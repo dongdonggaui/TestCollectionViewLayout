@@ -125,7 +125,8 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
     currentItemAttributes.frame = CGRectMake(self.currentLayoutPointX, self.currentLayoutPointY, width, height);
     self.currentLayoutPointX += width;
     self.lastItemHeight = height;
-    if (isLastItem) {
+    BOOL isLastSection = indexPath.section == [self.collectionView numberOfSections] - 1;
+    if (isLastSection && isLastItem) {
         self.currentLayoutPointY += insets.bottom;
     }
     
@@ -150,18 +151,29 @@ NSString * const MTCollectionViewSupplementaryViewColumnHeader = @"com.hly.mt.su
         CGFloat height = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section];
         CGFloat width = CGRectGetWidth(self.collectionView.frame);
         CGFloat x = 0;
-        CGFloat y = [[self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", indexPath.section]] floatValue];
+        CGFloat y = [[self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", (long)indexPath.section]] floatValue];
         
         BOOL sticky = [self.layoutDelegate respondsToSelector:@selector(mt_collectionViewLayout:stickyHeadersInSection:)] && [self.layoutDelegate mt_collectionViewLayout:self stickyHeadersInSection:indexPath.section];
         if (sticky) {
-            CGFloat maxY = y;
+            CGFloat stickyY = self.collectionView.contentOffset.y + self.collectionView.contentInset.top;
+            CGFloat maxY = stickyY;
             if (indexPath.section < [self.collectionView numberOfSections] - 1) {
-                CGFloat nextY = [[self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", indexPath.section + 1]] floatValue];
-                CGFloat nextHeight = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section + 1];
-                maxY = nextY - nextHeight;
+                NSNumber *nextPosition = nil;
+                for (int i = (int)indexPath.section; i < [self.collectionView numberOfSections]; i++) {
+                    nextPosition = [self.headerVerticalPositions objectForKey:[NSString stringWithFormat:@"section%ld", (long)(indexPath.section + 1)]];
+                    if (nextPosition) {
+                        break;
+                    }
+                }
+                if (nextPosition) {
+                    CGFloat nextY = [nextPosition floatValue];
+                    CGFloat nextHeight = [self.layoutDelegate mt_collectionViewLayout:self heightForHeaderInSection:indexPath.section + 1];
+                    maxY = nextY - nextHeight;
+                } else {
+                    maxY = stickyY;
+                }
             }
             
-            CGFloat stickyY = self.collectionView.contentOffset.y + self.collectionView.contentInset.top;
             if (y < stickyY) {
                 y = MIN(maxY, stickyY);
             }
